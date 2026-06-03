@@ -2,35 +2,23 @@ package utilities;
 
 public class ZoomBox 
 {
-	int myZoomLevel;
 	int myZoomScale;
-	int myCurrentTileSize;
+	int myTileSize;
 	Vec2Int myDimension;
 	Vec2Int myGridSize;
 	Vec2Int myWorldSize;
 	Vec2Int myMapGridPosition;
 	Vec2Int myMapWorldPosition;
 	
-	public ZoomBox(Vec2Int aDimension, Vec2Int aStartMapSize, int aStartTileSize)
+	public ZoomBox(Vec2Int aDimension, Vec2Int aStartMapSize, int aTileSize)
 	{
-		myZoomLevel = 10;
 		myZoomScale = 1;
-		myCurrentTileSize = aStartTileSize;
+		myTileSize = aTileSize;
 		myDimension = aDimension;
 		myGridSize = new Vec2Int(aStartMapSize);
-		myWorldSize = new Vec2Int();
-		myMapGridPosition = new Vec2Int(myGridSize.X * myCurrentTileSize, myGridSize.Y * myCurrentTileSize);
+		myWorldSize = new Vec2Int(myGridSize.X * myTileSize, myGridSize.Y * myTileSize);
+		myMapGridPosition = new Vec2Int();
 		myMapWorldPosition = new Vec2Int();
-	}
-
-	public int getZoomLevel()
-	{
-		return myZoomLevel;
-	}
-	
-	public void setZoomLevel(int aZoomLevel)
-	{
-		myZoomLevel = aZoomLevel;
 	}
 	
 	public int getZoomScale()
@@ -38,9 +26,35 @@ public class ZoomBox
 		return myZoomScale;
 	}
 	
-	public void setZoomScale(int aZoomScale)
+	public void zoomIn()
 	{
-		myZoomScale = aZoomScale;
+		myZoomScale++;
+		if (myZoomScale > 3)
+		{
+			myZoomScale = 3;
+		}
+		recalculateGridSize();
+	}
+	
+	public void zoomOut()
+	{
+		myZoomScale--;
+		if (myZoomScale < 1)
+		{
+			myZoomScale = 1;
+		}
+		recalculateGridSize();
+	}
+	
+	void recalculateGridSize()
+	{
+		myGridSize.X = myWorldSize.X / (myTileSize * myZoomScale);
+		myGridSize.Y = myWorldSize.Y / (myTileSize * myZoomScale);
+	}
+	
+	public int getTileSize()
+	{
+		return myTileSize * myZoomScale;
 	}
 	
 	public Vec2Int getDimension()
@@ -51,11 +65,6 @@ public class ZoomBox
 	public Vec2Int getGridSize()
 	{
 		return myGridSize;
-	}
-
-	public void setGridSize(Vec2Int aGridSize)
-	{
-		myGridSize = aGridSize;
 	}
 
 	public Vec2Int getWorldSize()

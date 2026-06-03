@@ -99,4 +99,9 @@ public class Window
 		
 		drawBorder(g2, Color.red);
 	}
+	
+	public void OnLeftClick(Vec2Int aPosition)
+	{
+		
+	}
 }

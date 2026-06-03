@@ -37,10 +37,14 @@ public class MiniMapWindow extends Window
 		myMap.setTile(aPosition.X, aPosition.Y, aTile);
 	}
 	
+	void drawZoomBoxBorder(Graphics2D g2)
+	{
+		g2.setColor(Color.blue);
+		//g2.drawRect((myGridPosition.X * myTileSize) - 5, (myGridPosition.Y * myTileSize) - 5, (myGridSize.X * myTileSize) + 10, (myGridSize.Y * myTileSize) + 10);
+	}
+	
 	public void draw(Graphics2D g2)
 	{
-		
-		
 		for (int y = 0; y < myMapSize.Y; y++)
 		{
 			for (int x = 0; x < myMapSize.X; x++)
@@ -48,12 +52,10 @@ public class MiniMapWindow extends Window
 				BufferedImage image = myMap.getImage(x, y);
 				if (image != null)
 				{
-					g2.drawImage(image, myMapWorldPosition.X + (x * myMapTileSize), myMapWorldPosition.Y + (y * myMapTileSize), myMapTileSize, myMapTileSize, null);
-					
+					g2.drawImage(image, myMapWorldPosition.X + (x * myMapTileSize), myMapWorldPosition.Y + (y * myMapTileSize), myMapTileSize, myMapTileSize, null);				
 				}
 			}
 		}
 		drawBorder(g2, Color.red);
 	}
-
 }

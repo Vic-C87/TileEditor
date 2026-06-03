@@ -29,10 +29,10 @@ public class InputManager implements KeyListener, MouseListener
 		int code = e.getKeyCode();
 		
 		if (code == KeyEvent.VK_W) {
-			myUpPressed = true;
+			myWindowManager.zoomIn();
 		}
 		if (code == KeyEvent.VK_S) {
-			myDownPressed = true;
+			myWindowManager.zoomOut();
 		}
 		if (code == KeyEvent.VK_A) {
 			myLeftPressed = true;

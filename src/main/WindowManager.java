@@ -7,6 +7,7 @@ import utilities.Utilities;
 import utilities.Debug;
 import utilities.Map;
 import utilities.Vec2Int;
+import utilities.ZoomBox;
 import window.InventoryWindow;
 import window.MainMapWindow;
 import window.MiniMapWindow;
@@ -31,7 +32,7 @@ public class WindowManager
 	
 	Map myMap;
 	Vec2Int myMapSize;
-	
+		
 	public WindowManager(JFrame aMainWindow, AppManager anAppManager, Utilities someUtilities)
 	{
 		myMainWindow = aMainWindow;
@@ -51,12 +52,21 @@ public class WindowManager
 		myMainMapWindow = new MainMapWindow(this, myMainMapWindowPosition, myMainMapWindowSize, myAppManager.myTileSize, 1);
 		myMiniMapWindow = new MiniMapWindow(this, myMiniMapWindowPosition, myMiniMapWindowSize, myAppManager.myTileSize, 1, myMap);
 		myInventoryWindow = new InventoryWindow(this, myInventoryWindowPosition, myInventoryWindowSize, myAppManager. myTileSize, 2);
-		
 	}
 	
 	public void loadTiles()
 	{
 		myInventoryWindow.loadTiles(myMainWindow);
+	}
+	
+	public void zoomIn()
+	{
+		myMainMapWindow.zoomIn();
+	}
+	
+	public void zoomOut()
+	{
+		myMainMapWindow.zoomOut();
 	}
 	
 	public void TileTest()
@@ -72,27 +82,23 @@ public class WindowManager
 	
 	public void OnLeftMouseClick(Vec2Int aPosition)
 	{
-		//Main Map Window HIT
+		//Main Map Window
 		if (myUtilities.checkTileCollision(aPosition, myMainMapWindow.getWorldPosition(), myMainMapWindow.getWorldSize()))
 		{
-			//Get box from minimap with size and position
-			//Calculate MAP index from box position and size
-			//if tile is selected ADD tile to Map
-			Debug.msg("Main map window hit");
+			myMainMapWindow.OnLeftClick(aPosition);
 		}
 		
-		//Mini Map Window HIT
+		//Mini Map Window
 		if (myUtilities.checkTileCollision(aPosition, myMiniMapWindow.getWorldPosition(), myMiniMapWindow.getWorldSize()))
 		{
-			//Draw box at position with same dimensions as 
-			Debug.msg("Mini map window hit");
+			//Not implemented yet
+			myMiniMapWindow.OnLeftClick(aPosition);
 		}
 		
-		//Inventory Window HIT
+		//Inventory Window
 		if (myUtilities.checkTileCollision(aPosition, myInventoryWindow.getWorldPosition(), myInventoryWindow.getWorldSize()))
 		{
-			myInventoryWindow.OnLeftClick(aPosition);
-			
+			myInventoryWindow.OnLeftClick(aPosition);		
 		}
 		Debug.msg(aPosition, "aPosition");
 	}
@@ -101,7 +107,6 @@ public class WindowManager
 	{
 		myInventoryWindow.draw(g2);
 		myMainMapWindow.draw(g2);
-		myMiniMapWindow.draw(g2);
-		
+		myMiniMapWindow.draw(g2);		
 	}
 }

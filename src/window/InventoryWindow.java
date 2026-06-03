@@ -65,18 +65,12 @@ public class InventoryWindow extends Window
         
         for (int i = 0; i < fd.getFiles().length; i++)
         {
-        	rawFilename = fd.getFiles()[i].toString();
-        	
+        	rawFilename = fd.getFiles()[i].toString();       	
         	String[] splitCheck = rawFilename.split("\\.");
 
         	if (splitCheck[splitCheck.length-1].equals("png"))
         	{
         		myRawFilenames.add(rawFilename);
-        		System.out.println("File : " + rawFilename);        	
-        	}
-        	else
-        	{
-            	System.out.println("Could not load: " + rawFilename + "\nNot a PNG");
         	}
         }
               
