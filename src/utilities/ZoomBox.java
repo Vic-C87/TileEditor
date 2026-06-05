@@ -59,7 +59,7 @@ public class ZoomBox
 		if (myMapWorldPosition.Y > 0)
 		{
 			myMapWorldPosition.Y -= myMapTileSize;
-			myMapGridPosition.Y = myMapWorldPosition.X / myMapTileSize;
+			myMapGridPosition.Y = myMapWorldPosition.Y / myMapTileSize;
 		}
 	}
 	public void moveBoxDown()

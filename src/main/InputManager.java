@@ -76,6 +76,14 @@ public class InputManager implements KeyListener, MouseListener
 		{
 			myWindowManager.setLayer2();
 		}
+		if (code == KeyEvent.VK_Z)
+		{
+			myWindowManager.fillZoomBox();
+		}
+		if (code == KeyEvent.VK_M)
+		{
+			myWindowManager.fillMap();
+		}
 	}
 
 	@Override

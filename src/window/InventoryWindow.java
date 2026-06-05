@@ -15,8 +15,10 @@ import javax.swing.JFrame;
 
 import main.WindowManager;
 import utilities.Debug;
+import utilities.Map;
 import utilities.Tile;
 import utilities.Vec2Int;
+import utilities.ZoomBox;
 
 public class InventoryWindow extends Window
 {
@@ -33,10 +35,15 @@ public class InventoryWindow extends Window
 	Vec2Int myTileInfoSize = new Vec2Int(6, 8);
 	Vec2Int myTileInfoPosition = new Vec2Int(35, 15);
 	
-	public InventoryWindow(WindowManager aWindowManager, Vec2Int aPosition, Vec2Int aSize, int aTileSize, int aTileScale)
+	Map myMap;
+	ZoomBox myZoomBox;
+	
+	public InventoryWindow(WindowManager aWindowManager, Vec2Int aPosition, Vec2Int aSize, int aTileSize, int aTileScale, Map aMap, ZoomBox aZoomBox)
 	{
 		super(aWindowManager, aPosition, aSize, aTileSize, aTileScale);
 		myTileInfoWindow = new TileInfoWindow(myWindowManager, myTileInfoPosition, myTileInfoSize, aTileSize, aTileScale);
+		myMap = aMap;
+		myZoomBox = aZoomBox;
 	}
 	
 	public void OnLeftClick(Vec2Int aPosition)
@@ -53,6 +60,15 @@ public class InventoryWindow extends Window
 			myWindowManager.setSelectedTile(mySelectedTile);
 			myTileInfoWindow.displaySelectedTile(mySelectedTile);
 			Debug.msg(mySelectedTile.getFileName());
+		}
+	}
+	
+	public void setColliderOnSelectedTile()
+	{
+		if (mySelectedTile != null)
+		{
+			mySelectedTile.setHaveCollider(!mySelectedTile.getHaveCollider());
+			myTileInfoWindow.displaySelectedTile(mySelectedTile);			
 		}
 	}
 	
@@ -146,10 +162,47 @@ public class InventoryWindow extends Window
 		myCurrentPage = myCurrentPage > 4 ? 4 : myCurrentPage;
 	}
 	
+	public Tile getSelectedTile()
+	{
+		return mySelectedTile;
+	}
+	
 	public void setPreviousPage()
 	{
 		myCurrentPage--;
 		myCurrentPage = myCurrentPage < 1 ? 1: myCurrentPage;
+	}
+	
+	public void fillZoomBox()
+	{
+		if (mySelectedTile != null)
+		{
+			int yStart = myZoomBox.getMapGridPosition().Y;
+			int yMax = yStart + myZoomBox.getGridSize().Y;
+			int xStart = myZoomBox.getMapGridPosition().X;
+			int xMax = xStart + myZoomBox.getGridSize().X;
+			for (int y = yStart; y < yMax ; y++)
+			{
+				for (int x = xStart; x < xMax; x++)
+				{
+					myMap.setTile(x, y, mySelectedTile);
+				}
+			}			
+		}
+	}
+	
+	public void fillMap()
+	{
+		if (mySelectedTile != null)
+		{
+			for (int y = 0; y < myMap.getMySize().Y; y++)
+			{
+				for (int x = 0; x < myMap.getMySize().X; x++)
+				{
+					myMap.setTile(x, y, mySelectedTile);
+				}
+			}			
+		}
 	}
 	
 	void drawSelectedBorder(Graphics2D g2, int anXPosition, int aYPosition)
@@ -184,10 +237,6 @@ public class InventoryWindow extends Window
 			}
 		}
 		
-//		for (Tile tile : myLoadedTiles)
-//		{
-//			tile.draw(g2, myTileSize * myTileScale);
-//		}
 		if (myBorderIsSelected)
 		{
 			drawSelectedBorder(g2, mySelectedBorderCoordinates.X, mySelectedBorderCoordinates.Y);

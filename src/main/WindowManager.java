@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
 import utilities.Utilities;
+import utilities.ColliderButton;
+import utilities.Debug;
 import utilities.EDirection;
 import utilities.Map;
 import utilities.Tile;
@@ -26,6 +28,8 @@ public class WindowManager
 	Vec2Int myMainMapWindowSize;
 	Vec2Int myMiniMapWindowPosition;
 	Vec2Int myMiniMapWindowSize;
+	Vec2Int myColliderButtonPosition;
+	Vec2Int myColliderButtonSize;
 	
 	MainMapWindow myMainMapWindow;
 	MiniMapWindow myMiniMapWindow;	
@@ -35,6 +39,7 @@ public class WindowManager
 	Map myLayer2;
 	Vec2Int myMapSize;
 	ZoomBox myZoomBox;
+	ColliderButton myColliderButton;
 	
 	Tile mySelectedTile;
 		
@@ -50,15 +55,20 @@ public class WindowManager
 		myMiniMapWindowSize = new Vec2Int(10, 10);
 		myInventoryWindowPosition = new Vec2Int(1, 17);
 		myInventoryWindowSize = new Vec2Int(30, 6);
+		myColliderButtonPosition = new Vec2Int(32, 18);
+		myColliderButtonSize = new Vec2Int(1,1);
 		
 		myMapSize = new Vec2Int(50, 50);
 		myMap = new Map("Layer 1", myAppManager.myTileSize, myMapSize);
 		myLayer2 = new Map("Layer 2", myAppManager.myTileSize, myMapSize);
 		myZoomBox = new ZoomBox(new Vec2Int(2, 1), myMainMapWindowSize, myAppManager.myTileSize, myMapSize);
 		
-		myMainMapWindow = new MainMapWindow(this, myMainMapWindowPosition, myMainMapWindowSize, myAppManager.myTileSize, 1, myMap, myLayer2,myZoomBox);
-		myMiniMapWindow = new MiniMapWindow(this, myMiniMapWindowPosition, myMiniMapWindowSize, myAppManager.myTileSize, 1, myMap, myLayer2,myZoomBox);
-		myInventoryWindow = new InventoryWindow(this, myInventoryWindowPosition, myInventoryWindowSize, myAppManager. myTileSize, 2);
+		myMainMapWindow = new MainMapWindow(this, myMainMapWindowPosition, myMainMapWindowSize, myAppManager.myTileSize, 1, myMap, myLayer2, myZoomBox);
+		myMiniMapWindow = new MiniMapWindow(this, myMiniMapWindowPosition, myMiniMapWindowSize, myAppManager.myTileSize, 1, myMap, myLayer2, myZoomBox);
+		myInventoryWindow = new InventoryWindow(this, myInventoryWindowPosition, myInventoryWindowSize, myAppManager. myTileSize, 2, myMap, myZoomBox);
+		
+		myColliderButton = new ColliderButton(myInventoryWindow, myColliderButtonPosition, myColliderButtonSize, "Toggle", myAppManager.myTileSize);
+		
 		mySelectedTile = null;
 	}
 	
@@ -110,6 +120,12 @@ public class WindowManager
 		{
 			myInventoryWindow.OnLeftClick(aPosition);		
 		}
+		
+		if (myUtilities.checkTileCollision(aPosition, myColliderButton.getPosition(), myColliderButton.getSize()))
+		{
+			myColliderButton.OnClick();
+			Debug.msg(aPosition, "position");
+		}
 	}
 	
 	public void OnRightMouseClick(Vec2Int aPosition)
@@ -152,10 +168,21 @@ public class WindowManager
 		myInventoryWindow.setPreviousPage();
 	}
 	
+	public void fillZoomBox()
+	{
+		myInventoryWindow.fillZoomBox();
+	}
+	
+	public void fillMap()
+	{
+		myInventoryWindow.fillMap();
+	}
+	
 	public void draw(Graphics2D g2)
 	{
 		myInventoryWindow.draw(g2);
 		myMainMapWindow.draw(g2);
-		myMiniMapWindow.draw(g2);		
+		myMiniMapWindow.draw(g2);
+		myColliderButton.draw(g2);
 	}
 }

@@ -26,14 +26,19 @@ public class TileInfoWindow extends Window
 		super(aWindowManager, aPosition, aSize, aTileSize, aTileScale);
 		myShouldDrawGrid = true;
 		myFileNameTextPosition = new Vec2Int(1, 2);
-		myFileNameTextPosition.X = myFileNameTextPosition.X * myTileSize + myWorldPosition.X;
-		myFileNameTextPosition.Y = myFileNameTextPosition.Y * myTileSize + myWorldPosition.Y;
+		myHaveColliderTextPosition = new  Vec2Int(1, 4);
+		myIndexTextPosition = new Vec2Int(1, 6);
+		setOffsetPosition();
 	}
 	
-	void setOffsetPosition(Vec2Int aPosition)
+	void setOffsetPosition()
 	{
-		aPosition.X = aPosition.X * myTileSize + myWorldPosition.X;
-		
+		myFileNameTextPosition.X = myFileNameTextPosition.X * myTileSize + myWorldPosition.X;
+		myFileNameTextPosition.Y = myFileNameTextPosition.Y * myTileSize + myWorldPosition.Y;
+		myHaveColliderTextPosition.X = myHaveColliderTextPosition.X * myTileSize + myWorldPosition.X;
+		myHaveColliderTextPosition.Y = myHaveColliderTextPosition.Y * myTileSize + myWorldPosition.Y;
+		myIndexTextPosition.X = myIndexTextPosition.X * myTileSize + myWorldPosition.X;
+		myIndexTextPosition.Y = myIndexTextPosition.Y * myTileSize + myWorldPosition.Y;
 	}
 	
 	public void displaySelectedTile(Tile aSelectedTile)
@@ -49,7 +54,7 @@ public class TileInfoWindow extends Window
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setColor(Color.white);
-		g2.setFont(new Font("Arial", Font.PLAIN, 24));
+		g2.setFont(new Font("Arial", Font.PLAIN, 20));
 		g2.drawString(aText, aPosition.X, aPosition.Y);
 	}
 	
@@ -59,7 +64,9 @@ public class TileInfoWindow extends Window
 		if (myShouldDisplayInfo)
 		{
 			drawText(g2,myFileNameTextPosition, mySelectedFileName);
-			
+			drawText(g2, myHaveColliderTextPosition, String.valueOf(mySelectedHaveCollider));
+			drawText(g2, myIndexTextPosition, String.valueOf(mySelectedIndex)
+					);
 		}
 		
 		drawBorder(g2, Color.red);
