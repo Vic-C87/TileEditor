@@ -15,7 +15,7 @@ public class Map
 		myTileSize = aTileSize;
 		mySize = aSize;
 		myMap = new Tile[aSize.X][aSize.Y];
-		initializeMap();
+		initializeMap();		
 	}
 	
 	void initializeMap()
@@ -39,9 +39,31 @@ public class Map
 		return myMap[anX][aY];
 	}
 	
-	public void setTile(int anX, int aY, Tile aTile)
+	public boolean setTile(int anX, int aY, Tile aTile)
 	{
-		myMap[anX][aY] = aTile;
+		if (myMap[anX][aY].getMyImage() == null)
+		{
+			myMap[anX][aY] = aTile;
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public void clearTile(int anX, int aY)
+	{
+		myMap[anX][aY] = new Tile();
+	}
+	
+	public boolean checkTile(int anX, int aY)
+	{
+		if (myMap[anX][aY].getMyImage() == null)
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	public BufferedImage getImage(int anX, int aY)

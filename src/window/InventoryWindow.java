@@ -14,11 +14,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import main.WindowManager;
+import utilities.Debug;
 import utilities.Tile;
 import utilities.Vec2Int;
 
 public class InventoryWindow extends Window
 {
+	int myCurrentPage = 1;
 	Vec2Int mySelectedBorderCoordinates = new Vec2Int();
 	boolean myBorderIsSelected = false;
 	
@@ -27,9 +29,14 @@ public class InventoryWindow extends Window
 	public ArrayList<Tile> myLoadedTiles = new ArrayList<Tile>();
 	Tile mySelectedTile = null;
 	
+	TileInfoWindow myTileInfoWindow;
+	Vec2Int myTileInfoSize = new Vec2Int(6, 8);
+	Vec2Int myTileInfoPosition = new Vec2Int(35, 15);
+	
 	public InventoryWindow(WindowManager aWindowManager, Vec2Int aPosition, Vec2Int aSize, int aTileSize, int aTileScale)
 	{
 		super(aWindowManager, aPosition, aSize, aTileSize, aTileScale);
+		myTileInfoWindow = new TileInfoWindow(myWindowManager, myTileInfoPosition, myTileInfoSize, aTileSize, aTileScale);
 	}
 	
 	public void OnLeftClick(Vec2Int aPosition)
@@ -43,6 +50,9 @@ public class InventoryWindow extends Window
 		if (index != 999)
 		{
 			mySelectedTile = myLoadedTiles.get(index);
+			myWindowManager.setSelectedTile(mySelectedTile);
+			myTileInfoWindow.displaySelectedTile(mySelectedTile);
+			Debug.msg(mySelectedTile.getFileName());
 		}
 	}
 	
@@ -61,7 +71,6 @@ public class InventoryWindow extends Window
         fd.setVisible(true);
         myLoadedDirectoryPath = fd.getDirectory();
         
-        System.out.println("Directory" + myLoadedDirectoryPath);
         
         for (int i = 0; i < fd.getFiles().length; i++)
         {
@@ -73,15 +82,19 @@ public class InventoryWindow extends Window
         		myRawFilenames.add(rawFilename);
         	}
         }
+        
+        String fileName;
               
         try 
 		{
         	for (int i = 0; i < myRawFilenames.size(); i++)
         	{
+        		String[] splitName = myRawFilenames.get(i).split("\\\\");
+        		fileName = splitName[splitName.length -1];
         		File tmpFile = new File(myRawFilenames.get(i));
         		BufferedImage image = ImageIO.read(tmpFile);
         		int index = myLoadedTiles.size();
-        		Tile tile = new Tile(image, index);
+        		Tile tile = new Tile(image, index, fileName);
         		myLoadedTiles.add(tile);
         	}
 		} catch(IOException e)
@@ -101,7 +114,12 @@ public class InventoryWindow extends Window
 				if (z < myLoadedTiles.size())
 				{
 					myLoadedTiles.get(z).setMyPosition((x + myGridPosition.X) * myTileSize, (y + myGridPosition.Y) * myTileSize);
-					z++;
+				}
+				z++;
+				if (z == 45 || z == 90 || z == 135)
+				{
+					y = 0;
+					x = -2;
 				}
 			}
 		}
@@ -111,6 +129,7 @@ public class InventoryWindow extends Window
 	{
 		Vec2Int borderPosition = new Vec2Int(x, y);
 		int index = myUtilities.getIndexFrom2DGrid(myGridSize, borderPosition, myTileScale);
+		index += ((myCurrentPage -1) * 45);
 		if (index < myLoadedTilesSize)
 		{
 			mySelectedBorderCoordinates = borderPosition;
@@ -119,6 +138,18 @@ public class InventoryWindow extends Window
 		}
 		
 		return 999;
+	}
+	
+	public void setNextPage()
+	{
+		myCurrentPage++;
+		myCurrentPage = myCurrentPage > 4 ? 4 : myCurrentPage;
+	}
+	
+	public void setPreviousPage()
+	{
+		myCurrentPage--;
+		myCurrentPage = myCurrentPage < 1 ? 1: myCurrentPage;
 	}
 	
 	void drawSelectedBorder(Graphics2D g2, int anXPosition, int aYPosition)
@@ -133,15 +164,36 @@ public class InventoryWindow extends Window
 	public void draw(Graphics2D g2)
 	{
 		drawGrid(g2);
-		for (Tile tile : myLoadedTiles)
+		for (int i = 0; i < myLoadedTiles.size(); i++)
 		{
-			tile.draw(g2, myTileSize * myTileScale);
+			if (myCurrentPage == 1 && i < 45)
+			{
+				myLoadedTiles.get(i).draw(g2, myTileSize * myTileScale);
+			}
+			else if (myCurrentPage == 2 && i > 44 && i < 90)
+			{
+				myLoadedTiles.get(i).draw(g2, myTileSize * myTileScale);
+			}
+			else if (myCurrentPage == 3 && i > 89 && i < 135)
+			{
+				myLoadedTiles.get(i).draw(g2, myTileSize * myTileScale);
+			}
+			else if (myCurrentPage == 4 && i > 134 && i < 180)
+			{
+				myLoadedTiles.get(i).draw(g2, myTileSize * myTileScale);
+			}
 		}
+		
+//		for (Tile tile : myLoadedTiles)
+//		{
+//			tile.draw(g2, myTileSize * myTileScale);
+//		}
 		if (myBorderIsSelected)
 		{
 			drawSelectedBorder(g2, mySelectedBorderCoordinates.X, mySelectedBorderCoordinates.Y);
 		}
 		drawBorder(g2, Color.red);
+		myTileInfoWindow.draw(g2);
 	}
 
 }

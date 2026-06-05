@@ -9,21 +9,25 @@ public class Tile
 	Vec2Int myPosition;
 	boolean myHaveCollider = false;
 	int myIndex;
+	String myFileName;
 	
+
 	public Tile()
 	{
 		myImage = null;
 		myPosition = new Vec2Int();
 		myIndex = 0;
+		myFileName = "";
 	}
 	
-	public Tile(BufferedImage anImage, int anIndex)
+	public Tile(BufferedImage anImage, int anIndex, String aFileName)
 	{
 		myImage = anImage;
 		myPosition = new Vec2Int();
 		myIndex = anIndex;
+		myFileName = aFileName;
 	}
-
+	
 	public BufferedImage getMyImage() 
 	{
 		return myImage;
@@ -45,12 +49,22 @@ public class Tile
 		myPosition.Y = aYPosition;
 	}
 
-	public boolean isMyHaveCollider() 
+	public boolean getHaveCollider() 
 	{
 		return myHaveCollider;
 	}
+	
+	public String getFileName()
+	{
+		return myFileName;
+	}
+	
+	public int getIndex()
+	{
+		return myIndex;
+	}
 
-	public void setMyHaveCollider(boolean aHaveCollider) 
+	public void setHaveCollider(boolean aHaveCollider) 
 	{
 		myHaveCollider = aHaveCollider;
 	}
@@ -64,6 +78,4 @@ public class Tile
 	{
 		g2.drawImage(myImage, myPosition.X, myPosition.Y, aSize.X, aSize.Y, null);
 	}
-	
-	
 }

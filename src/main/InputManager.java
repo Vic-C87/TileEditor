@@ -5,11 +5,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import utilities.EDirection;
 import utilities.Vec2Int;
 
 public class InputManager implements KeyListener, MouseListener
 {
 	public boolean myUpPressed, myDownPressed, myLeftPressed, myRightPressed;
+	public EDirection myDirection;
 	
 	Vec2Int myMousePosition = new Vec2Int();
 	
@@ -18,6 +20,7 @@ public class InputManager implements KeyListener, MouseListener
 	public InputManager(WindowManager aWindowManager)
 	{
 		myWindowManager = aWindowManager;
+		myDirection = EDirection.none;
 	}
 
 	@Override
@@ -28,26 +31,50 @@ public class InputManager implements KeyListener, MouseListener
 	{
 		int code = e.getKeyCode();
 		
-		if (code == KeyEvent.VK_W) {
+		if (code == KeyEvent.VK_UP)
+		{
 			myWindowManager.zoomIn();
 		}
-		if (code == KeyEvent.VK_S) {
+		if (code == KeyEvent.VK_DOWN)
+		{
 			myWindowManager.zoomOut();
 		}
-		if (code == KeyEvent.VK_A) {
-			myLeftPressed = true;
+		if (code == KeyEvent.VK_LEFT)
+		{
+			myWindowManager.previousPage();
 		}
-		if (code == KeyEvent.VK_D) {
-			myRightPressed = true;
+		if (code == KeyEvent.VK_RIGHT)
+		{
+			myWindowManager.nextPage();
+		}
+		
+		if (code == KeyEvent.VK_W) 
+		{
+			myDirection = EDirection.up;
+		}
+		if (code == KeyEvent.VK_S) 
+		{
+			myDirection = EDirection.down;
+		}
+		if (code == KeyEvent.VK_A) 
+		{
+			myDirection = EDirection.left;
+		}
+		if (code == KeyEvent.VK_D) 
+		{
+			myDirection = EDirection.right;
 		}		
 		if (code == KeyEvent.VK_L) 
 		{
 			myWindowManager.loadTiles();
 		}
-		if (code == KeyEvent.VK_T)
+		if (code == KeyEvent.VK_1)
 		{
-			//ADD TILES
-			myWindowManager.TileTest();
+			myWindowManager.setLayer1();
+		}
+		if (code == KeyEvent.VK_2)
+		{
+			myWindowManager.setLayer2();
 		}
 	}
 
@@ -56,17 +83,21 @@ public class InputManager implements KeyListener, MouseListener
 	{
 		int code = e.getKeyCode();
 		
-		if (code == KeyEvent.VK_W) {
-			myUpPressed = false;
+		if (code == KeyEvent.VK_W) 
+		{
+			myDirection = EDirection.none;
 		}
-		if (code == KeyEvent.VK_S) {
-			myDownPressed = false;
+		if (code == KeyEvent.VK_S) 
+		{
+			myDirection = EDirection.none;
 		}
-		if (code == KeyEvent.VK_A) {
-			myLeftPressed = false;
+		if (code == KeyEvent.VK_A) 
+		{
+			myDirection = EDirection.none;
 		}
-		if (code == KeyEvent.VK_D) {
-			myRightPressed = false;
+		if (code == KeyEvent.VK_D) 
+		{
+			myDirection = EDirection.none;
 		}		
 	}
 
@@ -84,7 +115,7 @@ public class InputManager implements KeyListener, MouseListener
 		
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
-			//Right click
+			myWindowManager.OnRightMouseClick(myMousePosition);
 		}
 	}
 

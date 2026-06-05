@@ -77,7 +77,7 @@ public class AppManager extends JPanel implements Runnable
 	
 	public void update()
 	{
-		//TODO
+		myWindowManager.moveZoomBox(myInputManager.myDirection);
 	}
 	
 	public void paintComponent(Graphics g) 
@@ -85,6 +85,7 @@ public class AppManager extends JPanel implements Runnable
 		super.paintComponent(g);
 		
 		Graphics2D g2 = (Graphics2D)g;
+		
 		for (int y = 0; y < myMaxScreenRow; y++)
 		{
 			for (int x = 0; x < myMaxScreenCol; x++)

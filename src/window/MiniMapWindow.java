@@ -5,22 +5,28 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import main.WindowManager;
+import utilities.EDirection;
 import utilities.Map;
-import utilities.Tile;
 import utilities.Vec2Int;
+import utilities.ZoomBox;
 
 public class MiniMapWindow extends Window
 {
 	Map myMap;
+	Map myLayer2;
+	ZoomBox myZoomBox;
 	Vec2Int myMapSize = new Vec2Int();
 	Vec2Int myMapWorldPosition = new Vec2Int();
 	int myMapTileSize;
 	
-	public MiniMapWindow(WindowManager aWindowManager, Vec2Int aPosition, Vec2Int aSize, int aTileSize, int aTileScale, Map aMap)
+	public MiniMapWindow(WindowManager aWindowManager, Vec2Int aPosition, Vec2Int aSize, int aTileSize, int aTileScale, Map aMap, Map aSecondLayer, ZoomBox aZoomBox)
 	{
 		super(aWindowManager, aPosition, aSize, aTileSize, aTileScale);
 		myMap = aMap;
+		myLayer2 = aSecondLayer;
 		setupMap();
+		myZoomBox = aZoomBox;
+		myZoomBox.setMapTileSize(myMapTileSize);
 	}
 	
 	void setupMap()
@@ -32,15 +38,32 @@ public class MiniMapWindow extends Window
 		myMapWorldPosition.Y = myWorldPosition.Y + (remainder / 2);
 	}
 	
-	public void addTile(Vec2Int aPosition, Tile aTile)
+	public void moveZoomBox(EDirection aDirection)
 	{
-		myMap.setTile(aPosition.X, aPosition.Y, aTile);
+		switch (aDirection)
+			{
+			case up:
+				myZoomBox.moveBoxUp();
+				break;
+			case down:
+				myZoomBox.moveBoxDown();
+				break;
+			case left:
+				myZoomBox.moveBoxLeft();
+				break;
+			case right:
+				myZoomBox.moveBoxRight();
+				break;
+
+			default:
+				break;
+			}
 	}
 	
 	void drawZoomBoxBorder(Graphics2D g2)
 	{
 		g2.setColor(Color.blue);
-		//g2.drawRect((myGridPosition.X * myTileSize) - 5, (myGridPosition.Y * myTileSize) - 5, (myGridSize.X * myTileSize) + 10, (myGridSize.Y * myTileSize) + 10);
+		g2.drawRect(myZoomBox.getMapWorldPosition().X + myMapWorldPosition.X, myZoomBox.getMapWorldPosition().Y + myMapWorldPosition.Y, myZoomBox.getGridSize().X * myMapTileSize, myZoomBox.getGridSize().Y * myMapTileSize);
 	}
 	
 	public void draw(Graphics2D g2)
@@ -49,13 +72,19 @@ public class MiniMapWindow extends Window
 		{
 			for (int x = 0; x < myMapSize.X; x++)
 			{
-				BufferedImage image = myMap.getImage(x, y);
-				if (image != null)
+				BufferedImage image1 = myMap.getImage(x, y);
+				BufferedImage image2 = myLayer2.getImage(x, y);
+				if (image1 != null)
 				{
-					g2.drawImage(image, myMapWorldPosition.X + (x * myMapTileSize), myMapWorldPosition.Y + (y * myMapTileSize), myMapTileSize, myMapTileSize, null);				
+					g2.drawImage(image1, myMapWorldPosition.X + (x * myMapTileSize), myMapWorldPosition.Y + (y * myMapTileSize), myMapTileSize, myMapTileSize, null);				
+				}
+				if (image2 != null)
+				{
+					g2.drawImage(image2, myMapWorldPosition.X + (x * myMapTileSize), myMapWorldPosition.Y + (y * myMapTileSize), myMapTileSize, myMapTileSize, null);				
 				}
 			}
 		}
+		drawZoomBoxBorder(g2);
 		drawBorder(g2, Color.red);
 	}
 }
