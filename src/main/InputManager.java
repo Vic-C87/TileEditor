@@ -84,6 +84,18 @@ public class InputManager implements KeyListener, MouseListener
 		{
 			myWindowManager.fillMap();
 		}
+		if (code == KeyEvent.VK_0)
+		{
+			myWindowManager.saveMap();
+		}
+		if (code == KeyEvent.VK_9)
+		{
+			myWindowManager.saveData();
+		}
+		if (code == KeyEvent.VK_C)
+		{
+			myWindowManager.clearMap();
+		}
 	}
 
 	@Override

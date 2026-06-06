@@ -18,13 +18,13 @@ public class Map
 		initializeMap();		
 	}
 	
-	void initializeMap()
+	public void initializeMap()
 	{
 		for (int y = 0; y < mySize.Y; y++)
 		{
 			for (int x = 0; x < mySize.X; x++)
 			{
-				myMap[x][y] = new Tile();
+				clearTile(x, y);
 			}
 		}
 	}

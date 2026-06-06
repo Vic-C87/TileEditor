@@ -1,6 +1,13 @@
 package main;
 
+import java.awt.FileDialog;
 import java.awt.Graphics2D;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import utilities.Utilities;
@@ -70,6 +77,87 @@ public class WindowManager
 		myColliderButton = new ColliderButton(myInventoryWindow, myColliderButtonPosition, myColliderButtonSize, "Toggle", myAppManager.myTileSize);
 		
 		mySelectedTile = null;
+	}
+	
+	public void saveMap()
+	{
+		FileDialog fd = new FileDialog(myMainWindow, "Save Map", FileDialog.SAVE);
+		fd.setFile("*.txt");
+        fd.setVisible(true);
+
+        String directory = fd.getDirectory();
+        String fileName = fd.getFile();
+
+        File file = new File(directory, fileName);
+        
+        ArrayList<String> mapList = new ArrayList<>();
+        String line;
+        int index;
+        
+        for (int y = 0; y < myMapSize.Y; y++)
+        {
+        	line = "";
+        	for (int x = 0; x < myMapSize.X; x++)
+        	{
+        		index = myMap.getTile(x, y).getIndex();
+        		if (index < 10)
+        		{
+        			line += "00";
+        		}
+        		else if (index < 100)
+        		{
+        			line += "0";
+        		}
+        		line += index + " ";
+        	}
+        	mapList.add(line);
+        }
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) 
+        {
+        	for (String string : mapList)
+			{
+				writer.write(string);
+				writer.newLine();
+			}
+            
+        } catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+	}
+	
+	public void saveData()
+	{
+		FileDialog fd = new FileDialog(myMainWindow, "Save Data", FileDialog.SAVE);
+		fd.setFile("*.txt");
+        fd.setVisible(true);
+
+        String directory = fd.getDirectory();
+        String fileName = fd.getFile();
+
+        File file = new File(directory, fileName);
+        
+        ArrayList<String> dataList = myInventoryWindow.getData();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) 
+        {
+        	for (String string : dataList)
+			{
+				writer.write(string);
+				writer.newLine();
+			}
+            
+        } catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+        
+	}
+	
+	public void clearMap()
+	{
+		myMap.initializeMap();
 	}
 	
 	public void loadTiles()

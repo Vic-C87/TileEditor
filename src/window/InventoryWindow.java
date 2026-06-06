@@ -28,7 +28,7 @@ public class InventoryWindow extends Window
 	
 	String myLoadedDirectoryPath = "";
 	ArrayList<String> myRawFilenames = new ArrayList<>();
-	public ArrayList<Tile> myLoadedTiles = new ArrayList<Tile>();
+	public ArrayList<Tile> myLoadedTiles = new ArrayList<>();
 	Tile mySelectedTile = null;
 	
 	TileInfoWindow myTileInfoWindow;
@@ -203,6 +203,23 @@ public class InventoryWindow extends Window
 				}
 			}			
 		}
+	}
+	
+	public ArrayList<String> getData()
+	{
+		ArrayList<String> data = new ArrayList<String>();
+		String fileName;
+		String haveCollider;
+		
+		for (Tile tile : myLoadedTiles)
+		{
+			fileName = tile.getFileName();
+			haveCollider = String.valueOf(tile.getHaveCollider());
+			data.add(fileName);
+			data.add(haveCollider);
+		}
+		
+		return data;
 	}
 	
 	void drawSelectedBorder(Graphics2D g2, int anXPosition, int aYPosition)
