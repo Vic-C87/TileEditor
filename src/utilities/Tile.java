@@ -7,7 +7,7 @@ public class Tile
 {
 	BufferedImage myImage;
 	Vec2Int myPosition;
-	boolean myHaveCollider = false;
+	boolean myHaveCollider = true;
 	int myIndex;
 	String myFileName;
 	
